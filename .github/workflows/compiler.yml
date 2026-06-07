@@ -18,7 +18,7 @@ jobs:
 
     - name: Toolchain İndir (Clang/GCC)
       run: |
-      mkdir -p $GITHUB_WORKSPACE/toolchain
+       mkdir -p $GITHUB_WORKSPACE/toolchain
         cd $GITHUB_WORKSPACE/toolchain
         # GitHub üzerinde barındırılan, wget ile sorunsuz inen stabil Android Clang 17 derleyicisi
         wget https://github.com/ZyCromerZ/Clang/releases/download/17.0.6-20240217-release/Clang-17.0.6-20240217-release.tar.gz
