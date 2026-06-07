@@ -18,12 +18,12 @@ jobs:
 
     - name: Toolchain İndir (Clang/GCC)
       run: |
-       mkdir -p $GITHUB_WORKSPACE/toolchain
+      mkdir -p $GITHUB_WORKSPACE/toolchain
         cd $GITHUB_WORKSPACE/toolchain
-        # Google'ın resmi stabil Android Clang derleyicisini çekiyoruz
-        wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r487747c.tar.gz
-        tar -xf clang-r487747c.tar.gz
-        rm clang-r487747c.tar.gz
+        # GitHub üzerinde barındırılan, wget ile sorunsuz inen stabil Android Clang 17 derleyicisi
+        wget https://github.com/ZyCromerZ/Clang/releases/download/17.0.6-20240217-release/Clang-17.0.6-20240217-release.tar.gz
+        tar -xf Clang-17.0.6-20240217-release.tar.gz
+        rm Clang-17.0.6-20240217-release.tar.gz
         echo "$GITHUB_WORKSPACE/toolchain/bin" >> $GITHUB_PATH
 
     - name: KernelSU Entegre Et (Rootsuz Yaşayamayanlar İçin)
