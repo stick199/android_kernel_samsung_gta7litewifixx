@@ -39,10 +39,10 @@ jobs:
 
     - name: Overclock Ayarları (Cihazı Eritme Aşaması)
       run: |
-        echo "Repodaki tüm dts ve dtsi dosyalarında frekans operasyonu başlıyor..."
-        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i 's/opp-hz = \/bits\/ 64 <[0-9]*>/opp-hz = \/bits\/ 64 <2300000000>/g' {} +
-        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i 's/gpu_freq = <[0-9]*>/gpu_freq = <900000000>/g' {} +
-        echo "GitHub Actions ameleliği tamamladı, frekanslar zorla yazıldı!
+        echo "Frekans modifikasyonu basliyor..."
+        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i "s/opp-hz = \/bits\/ 64 <[0-9]*>/opp-hz = \/bits\/ 64 <2300000000>/g" {} +
+        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i "s/gpu_freq = <[0-9]*>/gpu_freq = <900000000>/g" {} +
+        echo "Islem tamamlandi!"
 
     - name: Derleme Zamanı
       run: |
