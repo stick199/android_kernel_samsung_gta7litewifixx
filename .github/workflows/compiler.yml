@@ -16,15 +16,21 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y bc build-essential libncurses5-dev libssl-dev bison flex libelf-dev clang lld llvm
 
-    - name: Toolchain İndir (Clang/GCC)
+    - name: Toolchain İndir (Google NDK r16 Zip)
       run: |
-       mkdir -p $GITHUB_WORKSPACE/toolchain
+        mkdir -p $GITHUB_WORKSPACE/toolchain
         cd $GITHUB_WORKSPACE/toolchain
-        # GitHub üzerinde barındırılan, wget ile sorunsuz inen stabil Android Clang 17 derleyicisi
-        wget https://github.com/ZyCromerZ/Clang/releases/download/17.0.6-20240217-release/Clang-17.0.6-20240217-release.tar.gz
-        tar -xf Clang-17.0.6-20240217-release.tar.gz
-        rm Clang-17.0.6-20240217-release.tar.gz
-        echo "$GITHUB_WORKSPACE/toolchain/bin" >> $GITHUB_PATH
+        
+        # Google'dan zip'i çekiyoruz
+        wget https://android.googlesource.com/toolchain/prebuilts/ndk/r16/+archive/refs/heads/master.tar.gz
+        
+        # Dur lan, bu link googlesource olunca sonuna ne yazarsan yaz tar.gz veya zip olarak içeriği dinamik basar.
+        # Dosya adını ndk.tar.gz yapıp açalım en temizi:
+        mv r16 ndk.tar.gz 2>/dev/null || mv master.tar.gz ndk.tar.gz 2>/dev/null || true
+        tar -xf ndk.tar.gz || unzip r16
+        
+        # NDK'nın o meşhur derin bin klasörünü PATH'e ekliyoruz ki sistem şaşırmasın:
+        echo "$GITHUB_WORKSPACE/toolchain/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
 
     - name: KernelSU Entegre Et (Rootsuz Yaşayamayanlar İçin)
       run: |
@@ -42,11 +48,12 @@ jobs:
       run: |
         export ARCH=arm64
         export SUBARCH=arm64
-        export CROSS_COMPILE=aarch64-linux-gnu-
-        # Varsa Clang ayarların:
-        # export CC=clang
-
-        make <arch/arm64/configs/gta7litewifi_defconfig>
+        # NDK içindeki clang yolunu tam olarak gösteriyoruz:
+        export CC=$GITHUB_WORKSPACE/toolchain/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
+        export CLANG_TRIPLE=aarch64-linux-gnu-
+        export CROSS_COMPILE=$GITHUB_WORKSPACE/toolchain/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-
+        
+        make gta7litewifi_00_defconfig
         make -j$(nproc)
 
     - name: Artefaktı Paketle ve Fırlat
