@@ -46,7 +46,7 @@ jobs:
         # Varsa Clang ayarların:
         # export CC=clang
 
-        make <senin_cihazın_defconfig>
+        make <arch/arm64/configs/gta7litewifi_defconfig>
         make -j$(nproc)
 
     - name: Artefaktı Paketle ve Fırlat
