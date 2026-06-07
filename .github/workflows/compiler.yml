@@ -18,12 +18,13 @@ jobs:
 
     - name: Toolchain İndir (Clang/GCC)
       run: |
-        # Buraya kernelin hangi mimariyi kullanıyorsa (büyük ihtimalle AArch64) ona uygun Clang/GCC linkini koyacaksın kanka
-        mkdir toolchain
-        cd toolchain
-        wget <toolchain_indirme_linki>
-        tar -xf *
-        echo "$(pwd)/bin" >> $GITHUB_PATH
+       mkdir -p $GITHUB_WORKSPACE/toolchain
+        cd $GITHUB_WORKSPACE/toolchain
+        # Google'ın resmi stabil Android Clang derleyicisini çekiyoruz
+        wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r487747c.tar.gz
+        tar -xf clang-r487747c.tar.gz
+        rm clang-r487747c.tar.gz
+        echo "$GITHUB_WORKSPACE/toolchain/bin" >> $GITHUB_PATH
 
     - name: KernelSU Entegre Et (Rootsuz Yaşayamayanlar İçin)
       run: |
