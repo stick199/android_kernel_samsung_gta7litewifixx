@@ -48,13 +48,19 @@ jobs:
       run: |
         export ARCH=arm64
         export SUBARCH=arm64
-        # NDK içindeki clang yolunu tam olarak gösteriyoruz:
+        
+        # NDK içindeki clang ve cross-compile yollarını netleştiriyoruz
         export CC=$GITHUB_WORKSPACE/toolchain/toolchains/llvm/prebuilt/linux-x86_64/bin/clang
         export CLANG_TRIPLE=aarch64-linux-gnu-
         export CROSS_COMPILE=$GITHUB_WORKSPACE/toolchain/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android-
         
+        # İŞTE O SİHİRLİ SATIR (Assembler hatasını kökten çözer):
+        export CLANG_FLAGS="-fintegrated-as"
+        export KCFLAGS="-fintegrated-as"
+        
         make gta7litewifi_00_defconfig
-        make -j$(nproc)
+        # Üstteki bayrakları derleme komutuna da yediriyoruz:
+        make -j$(nproc) CC="$CC" CLANG_TRIPLE="$CLANG_TRIPLE" CROSS_COMPILE="$CROSS_COMPILE" KCFLAGS="-fintegrated-as"
 
     - name: Artefaktı Paketle ve Fırlat
       uses: actions/upload-artifact@v4
