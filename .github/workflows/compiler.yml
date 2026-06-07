@@ -33,10 +33,10 @@ jobs:
 
     - name: Overclock Ayarları (Cihazı Eritme Aşaması)
       run: |
-        # Bak burası en sevdiğin yer. DTS veya driver dosyalarındaki frekans tablolarıyla oynayacaksın.
-        # Manuel yapacaksan önceden repoda değiştir ya da buraya sed komutları yaz:
-        # Örnek (Temsili): sed -i 's/max-frequency = <1800000>/max-frequency = <2300000>/g' arch/arm64/boot/dts/...
-        echo "Yangın var dediler geldik!"
+        echo "Repodaki tüm dts ve dtsi dosyalarında frekans operasyonu başlıyor..."
+        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i 's/opp-hz = \/bits\/ 64 <[0-9]*>/opp-hz = \/bits\/ 64 <2300000000>/g' {} +
+        find arch/arm64/boot/dts/ -name "*.dts*" -type f -exec sed -i 's/gpu_freq = <[0-9]*>/gpu_freq = <900000000>/g' {} +
+        echo "GitHub Actions ameleliği tamamladı, frekanslar zorla yazıldı!""
 
     - name: Derleme Zamanı
       run: |
